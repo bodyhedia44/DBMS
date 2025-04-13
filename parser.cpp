@@ -2,34 +2,10 @@
 
 using namespace std;
 
-// Column implementation
+
 Column::Column(const string& name, ColumnType type)
     : name(name), type(type) {}
 
-// Schema implementation
-// void Schema::addTable(const string& tableName, const vector<Column>& columns) {
-//     tables[tableName] = columns;
-//     indexes[tableName] = vector<string>();
-// }
-
-// void Schema::addIndex(const string& tableName, const string& indexName) {
-//     if (hasTable(tableName)) {
-//         indexes[tableName].push_back(indexName);
-//     }
-// }
-
-// bool Schema::hasTable(const string& tableName) const {
-//     return tables.find(tableName) != tables.end();
-// }
-
-// bool Schema::hasColumn(const string& tableName, const string& columnName) const {
-//     if (!hasTable(tableName)) return false;
-//     const auto& columns = tables.at(tableName);
-//     return any_of(columns.begin(), columns.end(),
-//                   [&](const Column& col) { return col.name == columnName; });
-// }
-
-// SyntaxValidator implementation
 QueryInfo SyntaxValidator::validateAndExtract(const string& query) {
     QueryInfo info;
     smatch matches;
@@ -103,47 +79,6 @@ vector<string> SyntaxValidator::splitAndTrim(const string& str, char delimiter) 
     return result;
 }
 
-// SemanticCheck implementation
-// SemanticCheck::SemanticCheck(const Schema& schema)
-//     : schema(schema) {}
-
-// bool SemanticCheck::validate(const QueryInfo& queryInfo) {
-//     if (queryInfo.type == "CREATE") return true;
-
-//     if (queryInfo.type == "CREATE_INDEX") {
-//         if (!schema.hasTable(queryInfo.tableName)) {
-//             lastError = "Table '" + queryInfo.tableName + "' does not exist";
-//             return false;
-//         }
-//         if (!schema.hasColumn(queryInfo.tableName, queryInfo.columns[0])) {
-//             lastError = "Column '" + queryInfo.columns[0] + "' does not exist in table '" + queryInfo.tableName + "'";
-//             return false;
-//         }
-//         return true;
-//     }
-
-//     if (!schema.hasTable(queryInfo.tableName)) {
-//         lastError = "Table '" + queryInfo.tableName + "' does not exist";
-//         return false;
-//     }
-
-//     if (queryInfo.type == "SELECT" && queryInfo.columns[0] != "*") {
-//         for (const auto& column : queryInfo.columns) {
-//             if (!schema.hasColumn(queryInfo.tableName, column)) {
-//                 lastError = "Column '" + column + "' does not exist in table '" + queryInfo.tableName + "'";
-//                 return false;
-//             }
-//         }
-//     }
-
-//     return true;
-// }
-
-// string SemanticCheck::getLastError() const {
-//     return lastError;
-// }
-
-// ExecutionPlanGenerator implementation
 vector<ExecutionStep> ExecutionPlanGenerator::generatePlan(const QueryInfo& queryInfo) {
      vector<ExecutionStep> plan;
 
@@ -156,12 +91,12 @@ vector<ExecutionStep> ExecutionPlanGenerator::generatePlan(const QueryInfo& quer
         }
         else if (queryInfo.type == "CREATE_INDEX") {
             plan.push_back({"Create Index", queryInfo.indexName, "Creating new index"});
-            // plan.push_back({"On Table", queryInfo.tableName, "Target table"});
-            // plan.push_back({"On Column", queryInfo.columns[0], "Indexing column"});
+            
+            
         }
         else if (queryInfo.type == "INSERT") {
             plan.push_back({"Insert", queryInfo.tableName, "Inserting new row"});
-            // plan.push_back({"Values", join(queryInfo.values), "Values to insert"});
+            
         }
         else if (queryInfo.type == "DELETE") {
             plan.push_back({"Delete", queryInfo.tableName, "Deleting rows"});
@@ -182,7 +117,7 @@ vector<ExecutionStep> ExecutionPlanGenerator::generatePlan(const QueryInfo& quer
         }
         else if (queryInfo.type == "CREATE") {
             plan.push_back({"Create", queryInfo.tableName, "Creating new table"});
-            // plan.push_back({"Columns", join(queryInfo.columns), "Defining table columns"});
+            
         }
 
         return plan;
@@ -198,7 +133,7 @@ string ExecutionPlanGenerator::join(const vector<string>& items, const string& d
     return result;
 }
 
-// QueryAnalyzer implementation
+
 QueryAnalyzer::QueryAnalyzer() {
   
 }
@@ -212,11 +147,6 @@ vector<ExecutionStep> QueryAnalyzer::analyze(const string& query) {
         cout << "Syntax Error: Invalid query format\n";
         return {};
     }
-
-    // if (!semanticCheck.validate(queryInfo)) {
-    //     cout << "Semantic Error: " << semanticCheck.getLastError() << endl;
-    //     return {};
-    // }
 
     auto plan = planGenerator.generatePlan(queryInfo);
     return plan;

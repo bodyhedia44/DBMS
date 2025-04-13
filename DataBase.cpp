@@ -1,4 +1,4 @@
-// File: database.cpp
+
 #include "DataBase.hpp"
 #include <iostream>
 #include <arpa/inet.h> 
@@ -9,17 +9,17 @@ bool DataBase::createDatabase() {
 
         return true;
     }
-    //std::cerr << "Failed to create database: " << dbname << std::endl;
+    std::cerr << "Failed to create database: " << dbname << std::endl;
     return false;
 }
 
 bool DataBase::tableExists(const std::string& tableName) {
-    // Define the directory where tables are stored
+    
 
-    // Construct the full path to the table
+    
     std::filesystem::path tablePath = std::filesystem::path(dbname) / (tableName+".HAD");
 
-    // Check if the table exists as a file or directory
+    
     return std::filesystem::exists(tablePath);
 }
 
@@ -34,24 +34,24 @@ bool DataBase::createTable(const std::string& tableName, const std::map<std::str
     Table* table= new Table(tableName);
     table->schema = schema;
     table->size = size;
-    //std::cout << "Table created: " << tableName << std::endl;
+    
     return true;
 }
 
 bool DataBase::deleteTable(const std::string& tableName) {
-    // Define the directory where tables are stored
+    
     const std::string dbDirectory = "dbname";
 
-    // Construct the full path to the table directory
+    
     std::filesystem::path tablePath = std::filesystem::path(dbDirectory) / tableName;
 
-    // Check if the directory exists
+    
     if (!std::filesystem::exists(tablePath)) {
         std::cerr << "Table does not exist: " << tableName << std::endl;
         return false;
     }
 
-    // Try to delete the directory (only if it's empty)
+    
     try {
         if (std::filesystem::is_directory(tablePath) && std::filesystem::remove(tablePath)) {
             std::cout << "Table directory deleted: " << tableName << std::endl;
@@ -69,12 +69,10 @@ bool DataBase::deleteTable(const std::string& tableName) {
 Table* DataBase::getTable(const std::string tableName ) {
     if (tableExists(tableName)) {
         
-        
-        
         Table* my = deserializeSchema(dbname,tableName);
-        //std::cout <<"offset size "<< my->size<<std::endl;
+        
           for (const auto& [key, value] : my->schema) {
-        //std::cout << key << ": " << value << std::endl;
+        
     }
         return my;
     }
@@ -85,7 +83,7 @@ Table* DataBase::getTable(const std::string tableName ) {
 
 bool DataBase::serializeSchema(const std::map<std::string, std::string>& schema, const std::string& dbName, const std::string& fileName, uint32_t& size, uint32_t page_count) {
     try {
-        size = schema.size(); // Ensure size is set to the schema size
+        size = schema.size(); 
         std::string filePath = dbName + "/" + fileName + ".HAD";
         std::ofstream outFile(filePath, std::ios::binary);
         if (!outFile.is_open()) {
@@ -127,7 +125,7 @@ bool DataBase::serializeSchema(const std::map<std::string, std::string>& schema,
         }
 
         outFile.close();
-        //std::cout << "Schema serialized successfully to " << filePath << std::endl;
+        
         return true;
     } catch (const std::ios_base::failure& e) {
         std::cerr << "Error serializing schema: " << e.what() << std::endl;
@@ -157,8 +155,8 @@ Table* DataBase::deserializeSchema(const std::string& dbName, const std::string&
         throw std::ios_base::failure("Error: Failed to read page count.");
     }
 
-    // std::cout << "Size: " << size << std::endl;
-    // std::cout << "Page count: " << page_count << std::endl;
+    
+    
 
     for (uint32_t i = 0; i < size; ++i) {
         uint32_t keySize_network, valueSize_network;
@@ -170,7 +168,7 @@ Table* DataBase::deserializeSchema(const std::string& dbName, const std::string&
             throw std::ios_base::failure("Error: Failed to read key/value sizes.");
         }
 
-        //std::cout << "keySize: " << keySize << ", valueSize: " << valueSize << std::endl;
+        
 
         if (inFile.eof()) {
             throw std::ios_base::failure("Error: Premature end of file while reading key/value sizes.");
@@ -192,63 +190,62 @@ Table* DataBase::deserializeSchema(const std::string& dbName, const std::string&
     table->schema = schema;
     table->size = size;
     inFile.close();
-   // std::cout << "Schema deserialized successfully from " << filePath << std::endl;
+   
     return table;
 }
-// Deserialize the schema from a .HAD file using FileHandler
-// Table* DataBase::deserializeSchema(const std::string& dbName, const std::string& fileName) {
-//     std::map<std::string, std::string> schema;
-//     std::string filePath = dbName + "/" + fileName + ".HAD";
 
-//     std::ifstream inFile(filePath, std::ios::binary);
-//     if (!inFile.is_open()) {
-//         throw std::ios_base::failure("Error: Could not open file for reading: " + filePath);
-//     }
 
-//     uint32_t size_network;
-//     inFile.read(reinterpret_cast<char*>(&size_network), sizeof(size_network));
-//     uint32_t size = ntohl(size_network);
-//     std::cout << size << std::endl;
-//     if (inFile.fail()) {
-//         throw std::ios_base::failure("Error: Failed to read schema size.");
-//     }
 
-//     uint32_t page_count_network;
-//     inFile.read(reinterpret_cast<char*>(&page_count_network), sizeof(page_count_network));
-//     uint32_t page_count = ntohl(page_count_network);
-//     std::cout << page_count << std::endl;
-//     if (inFile.fail()) {
-//         throw std::ios_base::failure("Error: Failed to read page count.");
-//     }
 
-//     for (uint32_t i = 0; i < size; ++i) {
-//         uint32_t keySize_network, valueSize_network;
-//         inFile.read(reinterpret_cast<char*>(&keySize_network), sizeof(keySize_network));
-//         inFile.read(reinterpret_cast<char*>(&valueSize_network), sizeof(valueSize_network));
-//         uint32_t keySize = ntohl(keySize_network);
-//         std::cout << keySize  << std::endl;
-//         uint32_t valueSize = ntohl(valueSize_network);
-//         std::cout << valueSize  << std::endl;
-//         if (inFile.fail()) {
-//             throw std::ios_base::failure("Error: Failed to read key/value sizes.");
-//         }
 
-//         std::string key(keySize, '\0');
-//         inFile.read(&key[0], keySize);
-//         std::string value(valueSize, '\0');
-//         inFile.read(&value[0], valueSize);
-//         if (inFile.fail()) {
-//             throw std::ios_base::failure("Error: Failed to read key or value.");
-//         }
 
-//         schema[key] = value;
-//     }
 
-//     Table* table = new Table(fileName);
-//     table->page_count = page_count;
-//     table->schema = schema;
-//     table->size = size;
-//     inFile.close();
-//     std::cout << "Schema deserialized successfully from " << filePath << std::endl;
-//     return table;
-// }
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+

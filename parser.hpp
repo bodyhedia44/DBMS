@@ -32,8 +32,8 @@ public:
     bool hasColumn(const std::string& tableName, const std::string& columnName) const;
 
 private:
-    //std::unordered_map<std::string, std::vector<Column>> tables;
-    //std::unordered_map<std::string, std::vector<std::string>> indexes;
+    
+    
 };
 
 struct QueryInfo {
@@ -52,17 +52,6 @@ public:
 private:
     std::vector<std::string> splitAndTrim(const std::string& str, char delimiter = ',');
 };
-
-// class SemanticCheck {
-// public:
-//     SemanticCheck(const Schema& schema);
-//     bool validate(const QueryInfo& queryInfo);
-//     std::string getLastError() const;
-
-// private:
-//     // Schema schema;
-//     std::string lastError;
-// };
 
 struct ExecutionStep {
     std::string operation;
@@ -85,11 +74,11 @@ public:
     const QueryInfo& getQueryInfo() const;
 
 private:
-    //const Schema& schema;
+    
     SyntaxValidator syntaxValidator;
-    // SemanticCheck semanticCheck;
+    
     ExecutionPlanGenerator planGenerator;
     QueryInfo queryInfo;
 };
 
-#endif // PARSER_HPP
+#endif 

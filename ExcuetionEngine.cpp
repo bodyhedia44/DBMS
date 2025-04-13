@@ -1,14 +1,8 @@
 #include "ExcuetionEngine.hpp"
 #include <iostream>
 #include <algorithm>
-ExecutionEngine::ExecutionEngine(DataBase Db):Db(Db){
+ExecutionEngine::ExecutionEngine(DataBase Db):Db(Db){}
 
-}
-
-
-
-
-// Create a new table
 bool ExecutionEngine::Create_table(const std::string& tableName, const std::map<std::string,std::string> schema) {
     Db.createTable(tableName,schema);
     Db.getTable(tableName)->Create_page();
@@ -16,7 +10,7 @@ bool ExecutionEngine::Create_table(const std::string& tableName, const std::map<
     return true;
 }
 
-// Insert a record into a table
+
 bool ExecutionEngine::insert(const std::string& tableName,const std::vector<std::pair<std::string, std::pair<int, std::string>>> attributes) {
     
    Page* p =Db.getTable(tableName)->Get_page(1);
@@ -27,7 +21,7 @@ bool ExecutionEngine::insert(const std::string& tableName,const std::vector<std:
     return true;
 }
 
-// Update records in a table
+
 bool ExecutionEngine::update(const std::string& tableName, const std::string& conditionKey, const std::string& conditionValue,
                              const std::string& updateKey, const std::string& updateValue) {
     if (!tableExists(tableName)) {
@@ -49,7 +43,7 @@ bool ExecutionEngine::update(const std::string& tableName, const std::string& co
     return updated;
 }
 
-// Delete records from a table
+
 bool ExecutionEngine::deleteRecord(std::string& tableName,const std::pair<std::string, std::string>& attribute) {
    Page* page = Db.getTable(tableName)->Get_page(1);
    page->del_tuple(attribute);
@@ -58,7 +52,7 @@ bool ExecutionEngine::deleteRecord(std::string& tableName,const std::pair<std::s
     std::cout<<"Records Is Deleted Successfully"<<std::endl;
 }
 
-// Select records from a table
+
 std::vector<Tuple> ExecutionEngine::select(std::string& tableName,const std::pair<std::string, std::string>& attribute){
     
     std::vector<Tuple> res= Db.getTable(tableName)->Get_page(1)->get_tuple(attribute);
@@ -67,12 +61,12 @@ std::vector<Tuple> ExecutionEngine::select(std::string& tableName,const std::pai
    
 }
 
-// Helper method to check if a table exists
+
 bool ExecutionEngine::tableExists(const std::string& tableName) const {
     return tables.find(tableName) != tables.end();
 }
 
-// Helper method to check if a database exists
+
 bool ExecutionEngine::databaseExists(const std::string& dbName) const {
     return !currentDatabase.empty() && currentDatabase == dbName;
 }
