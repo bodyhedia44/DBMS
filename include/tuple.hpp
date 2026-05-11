@@ -11,22 +11,18 @@ public:
     enum AttributeType {
         TYPE_STRING = 1,
         TYPE_INT = 2,
-        
     };
 
-    
     std::vector<std::pair<std::string, std::pair<AttributeType, std::string>>> attributes;
 
-    
     void add_attribute(const std::string& key, const std::string& value);
-    std::string get_attribute(const std::string& key);
+    std::string get_attribute(const std::string& key) const;
     void update_attribute(const std::vector<std::pair<std::string, std::string>>& attrs);
-    std::string Serialize(); 
-    void Deserialize(const std::string& data); 
+    std::string Serialize() const;
+    void Deserialize(const std::string& data);
 
 private:
-    static const size_t TUPLE_SIZE = 50; 
-    
+    static const size_t TUPLE_SIZE = 50;
 };
 
-#endif 
+#endif

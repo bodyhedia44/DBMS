@@ -9,33 +9,6 @@
 #include <sstream>
 #include <iostream>
 
-enum class ColumnType {
-    INTEGER,
-    VARCHAR,
-    BOOLEAN,
-    FLOAT,
-    CHAR
-};
-
-class Column {
-public:
-    Column(const std::string& name, ColumnType type);
-    std::string name;
-    ColumnType type;
-};
-
-class Schema {
-public:
-    void addTable(const std::string& tableName, const std::vector<Column>& columns);
-    void addIndex(const std::string& tableName, const std::string& indexName);
-    bool hasTable(const std::string& tableName) const;
-    bool hasColumn(const std::string& tableName, const std::string& columnName) const;
-
-private:
-    
-    
-};
-
 struct QueryInfo {
     std::string type;
     std::string tableName;
@@ -74,11 +47,9 @@ public:
     const QueryInfo& getQueryInfo() const;
 
 private:
-    
     SyntaxValidator syntaxValidator;
-    
     ExecutionPlanGenerator planGenerator;
     QueryInfo queryInfo;
 };
 
-#endif 
+#endif

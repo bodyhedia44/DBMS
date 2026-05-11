@@ -1,0 +1,9 @@
+# Build artifacts
+*.o
+dbms
+
+# Database files
+*.HAD
+
+# OS files
+.DS_Store

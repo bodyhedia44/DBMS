@@ -13,23 +13,19 @@
 namespace fs = std::filesystem;
 
 class DataBase {
-
-private:
-    
-    
-
 public:
     std::string dbname;
-    
+
     DataBase(const std::string& name);
     bool createDatabase();
     bool tableExists(const std::string& tableName);
     bool createTable(const std::string& tableName, const std::map<std::string, std::string>& schema);
     bool deleteTable(const std::string& tableName);
     Table* deserializeSchema(const std::string& dbName, const std::string& fileName);
-    bool serializeSchema(const std::map<std::string, std::string>& schema, const std::string& dbName, const std::string& fileName,uint32_t& size, uint32_t page_count) ;
-    
-    Table* getTable(const std::string tableName);
+    bool serializeSchema(const std::map<std::string, std::string>& schema, const std::string& dbName,
+                         const std::string& fileName, uint32_t& size, uint32_t page_count);
+    Table* getTable(const std::string& tableName);
+    bool updatePageCount(const std::string& tableName, uint32_t page_count);
 };
 
-#endif 
+#endif
